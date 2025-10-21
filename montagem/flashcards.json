@@ -1,0 +1,397 @@
+{
+  "bios": {
+    "titulo": "BIOS: Conceitos Fundamentais",
+    "icone": "💾",
+    "descricao": "Princípios e funcionamento da BIOS nos computadores.",
+    "flashcards": [
+      {
+        "perg": "O que significa **BIOS**?",
+        "resp": "Significa **Basic Input Output System** (Sistema Básico de Entrada/Saída). Um pequeno programa armazenado numa memória **ROM** na motherboard, considerado um tipo de *firmware*."
+      },
+      {
+        "perg": "Qual a principal função da BIOS?",
+        "resp": "Inicializar, testar e configurar os componentes essenciais do computador através do **POST** ([Power-On Self Test), e iniciar o carregamento do sistema operativo."
+      },
+      {
+        "perg": "O que é **firmware**?",
+        "resp": "**Software incorporado em hardware** que controla funções básicas, raramente modificado pelo utilizador comum."
+      },
+      {
+        "perg": "Para que serve o **BIOS Setup**?",
+        "resp": "Permite configurar opções do hardware, como ordem de arranque, definições de discos e passwords."
+      },
+    { "perg": "O que são **bips** sonoros durante o **POST**?",
+      "resp": "São **códigos de erro** usados pela BIOS para indicar problemas de hardware detectados durante o autoteste de arranque." 
+    },
+    { "perg": "Como a BIOS inicia o processo de arranque?",
+        "resp": "A BIOS executa o POST, depois procura o bootloader num dispositivo configurado, que carrega o kernel do sistema operativo para a RAM."
+      },
+    { "perg": "Para que serve a **bateria CMOS**?", 
+      "resp": "Mantém as configurações e o relógio do sistema mesmo quando o computador está desligado." 
+     }
+
+
+    ]
+  },
+  "uefi": {
+    "titulo": "UEFI",
+    "icone": "🛡️",
+    "descricao": "Nova geração de firmware que substitui a BIOS tradicional.",
+    "flashcards": [
+      {
+        "perg": "O que é a **UEFI**?",
+        "resp": "Significa **Unified Extensible Firmware Interface**. Uma especificação mais avançada que a BIOS, com suporte para discos grandes, inicialização rápida, maior segurança e suporte a drivers modernos."
+      },
+      {
+        "perg": "Quais as principais diferenças entre BIOS e UEFI?",
+        "resp": "**UEFI** armazena definições numa partição especial (EFI), suporta discos até 9ZB, inicialização mais rápida, modo gráfico, Secure Boot, suporta GPT. **BIOS** é mais simples, compatível com hardware antigo, suporta até 2.2TB usando MBR, modo texto e 16 bits."
+      },
+      {
+        "perg": "O que é o **Secure Boot**?",
+        "resp": "Funcionalidade da UEFI que impede o carregamento de software não autorizado ou malicioso durante o arranque do sistema."
+      },
+    { "perg": "O que é o modo **Legacy Boot**?", 
+      "resp": "É um recurso na UEFI que **emula o comportamento de uma BIOS tradicional** para compatibilidade com sistemas antigos."
+     },
+       { "perg": "Como a UEFI armazena suas configurações?",
+       "resp": "Em arquivos na partição especial EFI System Partition (ESP), ao invés do chip ROM." }
+    ]
+  },
+  "particionamento": {
+    "titulo": "Particionamento de Disco",
+    "icone": "🗂️",
+    "descricao": "Noções sobre partições e sistemas de ficheiros.",
+    "flashcards": [
+      {
+        "perg": "O que é **particionamento de disco**?",
+        "resp": "Processo de **dividir um disco rígido em partes lógicas** independentes (partições) para organizar dados e instalar sistemas operativos."
+      },
+      {
+        "perg": "Diferença entre **MBR** e **GPT**?",
+    "resp": "**{color:red}MBR{/}** limita a 4 partições primárias por disco e suporta até 2.2TB. **{color:green}GPT{/}** suporta até 128 partições, discos de tamanho virtualmente ilimitado, proteção e recuperação melhoradas."
+      },
+   { "perg": "Quais são as **vantagens do particionamento** de discos?", 
+     "resp": "Organiza ficheiros, permite instalar múltiplos sistemas e protege dados em caso de falha."
+      },
+    { "perg": "O que diferencia uma **partição** **primária** de uma **partição lógica**?",
+         "resp": "**Partições primárias** podem ser marcadas como ativas para arranque.<br>**Partições lógicas** ficam dentro de uma partição estendida e não podem ser ativas."
+     },
+      {
+        "perg": "O que é um **sistema de ficheiros**?",
+        "resp": "Método usado pelo sistema operativo para organizar, armazenar e gerir dados em dispositivos de armazenamento (ex: FAT32, NTFS, EXT4)."
+      },
+    { "perg": "Como um **sistema de ficheiros** influencia o uso do disco?", 
+      "resp": "Define como os dados são organizados, acedidos e protegidos, impactando compatibilidade, segurança e desempenho."
+    }
+
+    ]
+  },
+  "raid": {
+    "titulo": "RAID: Redundant Array of Independent Disks",
+    "icone": "🗄️",
+    "descricao": "Tecnologia de agrupamento de discos para aumentar desempenho e/ou redundância.",
+    "flashcards": [
+      { "perg": "O que significa **RAID**?",
+        "resp": "**Redundant Array of Independent Disks**: agrupa vários discos para melhorar desempenho, redundância ou ambos."
+      },
+      { "perg": "Como o RAID pode ser configurado?", 
+        "resp": "A configuração pode ser feita por hardware (controladora dedicada) ou software (no próprio sistema operativo)."
+      },
+      { "perg": "Para que serve o **RAID 0**?",
+        "resp": "Aumenta a velocidade de leitura e escrita via '**striping**', mas não oferece redundância dos dados."
+      },
+      { "perg": "Para que serve o **RAID 1**?",
+        "resp": "Duplica dados entre dois discos (**mirroring**), aumentando a segurança: se um disco falhar, o outro mantém a informação."
+      },
+    { "perg": "O que é o RAID 10?", 
+      "resp": "Combinação de RAID 1 e RAID 0, fornece alto desempenho com redundância, exigindo pelo menos 4 discos." 
+    }
+    ]
+  },
+   "manutencao": {
+    "titulo": "Tipos de Manutenção",
+    "icone": "🛠️",
+    "descricao": "Visão geral da manutenção informática.",
+    "flashcards": [
+      { "perg": "O que é **manutenção preventiva**?",
+      "resp": "Intervenções programadas para evitar falhas, tal como limpeza, verificação de componentes e atualização de software."
+       },
+      { "perg": "O que caracteriza a **manutenção corretiva**?",
+       "resp": "Executada após avaria, inclui substituição de peças, reparações físicas ou troca de componentes defeituosos."
+      },
+      { "perg": "O que diferencia a manutenção preventiva da corretiva?", 
+        "resp": "A preventiva evita problemas antes que aconteçam; a corretiva resolve avarias já existentes."
+      },
+      { "perg": "Como funciona a **manutenção preditiva**?",
+       "resp": "Monitorização contínua dos equipamentos usando sensores e software para antecipar falhas."
+      },
+      { "perg": "Por que a **escolha das ferramentas certas** é crucial?", 
+      "resp": "Garante eficiência, rapidez, segurança dos técnicos e proteção dos componentes."
+      },
+      { "perg": "Quais riscos podem surgir da negligência na manutenção de computadores?",
+        "resp": "Danos permanentes a componentes, perda de dados e aumento de custos de reparação."
+      },
+      { "perg": "Quais sinais indicam que um computador necessita de **manutenção corretiva**?", 
+        "resp": "Falhas frequentes, lentidão, ruídos anormais, superaquecimento ou travamentos inesperados."
+      }
+    ]
+  },
+  "ferramentas": {
+    "titulo": "Ferramentas Principais",
+    "icone": "🔧",
+    "descricao": "Descrição das ferramentas essenciais para montagem e manutenção.",
+    "flashcards": [
+      { "perg": "Quais **ferramentas** não podem faltar num **kit básico**?", 
+      "resp": "Chaves de fendas, estrela, torx, allen, alicate universal, multímetro, pincel, escova, pulseira antiestática, ferro de soldar."
+      },
+      { "perg": "Como a **lanterna** auxilia na manutenção?",
+       "resp": "Proporciona luz adicional para inspeção de componentes internos e identificação de problemas em locais escondidos."
+      },
+      { "perg": "O que é a **pulseira antiestática**?",
+        "resp": "Descarrega eletricidade estática do corpo do técnico para a terra, protegendo componentes sensíveis."
+      },
+      { "perg": "Quais vantagens oferece um kit de chaves com pontas intercambiáveis?",
+      "resp": "Maior versatilidade e praticidade para diferentes tipos de parafusos."
+      }
+    ]
+  },
+  "medicao_limpeza": {
+    "titulo": "Medição e Limpeza",
+    "icone": "🧹",
+    "descricao": "Ferramentas para medir, testar, limpar e garantir o bom funcionamento.",
+    "flashcards": [
+      { "perg": "Para que serve o **multímetro digital**?", 
+      "resp": "Permite medir tensão, corrente, resistência, testar continuidade e diagnosticar problemas elétricos."
+      },
+      { "perg": "Quando se utiliza **ar comprimido** ou **soprador de ar**?",
+   	    "resp": "Para remover poeira e detritos de componentes e áreas de difícil acesso dentro dos computadores." 
+      },
+      { "perg": "Qual a importância do **limpa-contactos**?", 
+        "resp": "Elimina resíduos e oxidação de conexões elétricas, aumentando confiabilidade de placas e conectores." 
+      },
+      { "perg": "Por que usar **pincel** e **escova antiestática**?", 
+        "resp": "Removem poeira sem gerar eletricidade estática, protegendo componentes sensíveis."
+      },
+      { "perg": "Quais cuidados devem ser tomados ao utilizar **ar comprimido** dentro do computador?",
+        "resp": "Não dirigir jatos fortes em ventoinhas e evitar resíduos líquidos." 
+      },
+      { "perg": "O que pode acontecer se não for removida adequadamente a poeira dos ventiladores?", 
+        "resp": "Aumenta o superaquecimento, ruídos e reduz a eficiência do resfriamento." 
+      },
+      { "perg": "Quais **equipamentos** são usados na **soldadura**?", 
+        "resp": "Ferro/estação de soldar, estação de ar quente, chupa-soldas, fita dessoldadora, suporte, pasta de soldar."
+      }
+
+    ]
+  },
+  "materiais_acessorios": {
+    "titulo": "Materiais e Acessórios",
+    "icone": "📦",
+    "descricao": "Itens indispensáveis para organização e proteção.",
+    "flashcards": [
+      { "perg": "O que é **manga termo retrátil**?",
+        "resp": "Isola e protege conexões de fios após soldadura, proporcionando acabamento e segurança elétrica." 
+      },
+      { "perg": "Quais precauções tomar ao utilizar manga termo-retátil?",
+        "resp": "Escolher diâmetro correto, aquecer uniformemente e evitar sobreaquecimento."
+      },
+      { "perg": "Qual a utilidade das **abraçadeiras** de cabos?", 
+        "resp": "Para organizar cabos internos, melhorar circulação do ar e facilitar manutenção."
+      },
+      { "perg": "Qual a função da **mala de ferramentas**?",
+        "resp": "Organiza e protege ferramentas, facilita transporte, previne perdas e danos."
+      },
+      { "perg": "Para que serve o **recipiente magnético** para parafusos?",
+        "resp": "Segura parafusos durante desmontagens, evitando perdas e acidentes."
+      },
+      { "perg": "Por que usar **álcool isopropílico** para limpar componentes eletrônicos?",
+        "resp": "Evapora rápido, não conduz eletricidade e não deixa resíduos."
+      },
+      { "perg": "Qual o papel da **pasta térmica**?",
+        "resp": "Melhora a transferência de calor entre processador e dissipador, reduzindo temperaturas e evitando sobreaquecimento."
+      }
+    ]
+  },
+  "fontes": {
+    "titulo": "Fundamentos da Fonte de Alimentação",
+    "icone": "🔌",
+    "descricao": "Noções essenciais sobre fontes de alimentação para computadores.",
+    "flashcards": [
+      { "perg": "O que é uma **fonte de alimentação**?", 
+        "resp": "Dispositivo que **converte corrente alternada** da tomada (230V) **em corrente contínua**, com tensões adequadas para os componentes do computador."
+      },
+      { "perg": "O que significa a sigla **PSU**?",
+        "resp": "**Power Supply Unit**. Fonte de alimentação responsável por fornecer energia aos componentes internos."
+      },
+      { "perg": "Que **tensões** uma fonte de alimentação típica fornece ao PC?",
+        "resp": "3.3V, 5V, 12V, -12V, e GND."
+      },
+      { "perg": "Quais **critérios considerar ao escolher** uma boa fonte para o PC?",
+        "resp": "Potência suficiente, eficiência (80 Plus), compatibilidade, número de conectores, e qualidade da marca." 
+      },
+      { "perg": "Distingue fontes **modulares**, **semi-modulares** e **não modulares**?",
+        "resp": "**Modular**: cabos conectáveis.<br>**Semi-modular**: apenas cabos principais fixos.<br>**Não modular**: todos os cabos soldados."
+      },
+      { "perg": "Como funciona o sinal **{color:darkgray}PWROK{/}**?",
+        "resp": "Indica à motherboard que todas as tensões estão corretas e pode iniciar o computador."
+      },
+      { "perg": "O que faz o sinal **{color:green}PSON{/}**?",
+        "resp": "Mantém o sinal baixo para ligar/desligar a fonte; controlado pela motherboard."
+      },
+      { "perg": "Que **cuidados** tomar ao instalar uma fonte?", 
+        "resp": "Desligar o PC, verificar conexões, garantir boa ventilação e evitar contato com água."
+      }
+    ]
+  },
+  "teste_e_eficiencia": {
+    "titulo": "Teste e Eficiência ",
+    "icone": "⚡",
+    "descricao": "Testes, potência e eficiência.",
+    "flashcards": [
+      { "perg": "Como **testar** se a **fonte de alimentação** fornece a tensão correta?",
+          "resp": "Medir com **multímetro** ou usar um **testador de fontes**, verificando os valores nos conectores."
+      },
+      { "perg": "Por que uma fonte pode fornecer a tensão correta e não funcionar no PC?",
+        "resp": "Pode não conseguir fornecer corrente suficiente sob carga, causando resets ou desligamentos aleatórios."
+      },
+      { "perg": "Para que serve a **certificação {color:blue}80 Plus{/}**?",
+      "resp": "Indica que a fonte de alimentação de um PC tem uma **eficiência energética de pelo menos 80%** sob cargas de 20%, 50% e 100% da sua capacidade nominal."
+      },
+      { "perg": "O que significa **eficiência energética** numa fonte?",
+        "resp": "Percentagem da energia da tomada realmente entregue ao PC, o resto é perdido em calor."
+      },
+      { "perg": "Como calcular a **potência máxima** da fonte?",
+        "resp": "Multiplica a **tensão** pela **corrente** de cada saída (3.3V, 5V, 12V1, 12V2, ...) e soma os resultados."
+      },
+      { "perg": "Por que é importante **dimensionar corretamente a potência**?",
+        "resp": "Evita sobrecarga, protege componentes e garante estabilidade ao sistema."
+      },
+      { "perg": "Quais **proteções** modernas existem nas fontes ATX?",
+        "resp": "Proteção contra curto-circuito, sobretensão, sobrecorrente:<br><li>OVP (Over-Voltage Protection)</li><li>SCP (Short-Circuit Protection)</li><li>OCP (Over-Current Protection)</li>"
+      }
+    ]
+  },
+  "montagem": {
+    "titulo": "Procedimentos de Montagem",
+    "icone": "🧩",
+    "descricao": "Etapas de montagem de computadores.",
+    "flashcards": [
+      { "perg": "Qual a função do **manual da motherboard** na montagem?",
+        "resp": "Indica posições corretas de conectores e jumpers, evitando erros."
+      },
+      { "perg": "Quais passos básicos para **instalar a motherboard na caixa**?",
+        "resp": "Instalar espaçadores, posicionar placa, aparafusar nos furos metalizados."
+      },
+      { "perg": "Por que se deve aplicar **pasta térmica** no processador?",
+        "resp": "Melhora transferência de calor entre CPU e dissipador, evitando sobreaquecimento."
+      },
+      { "perg": "Como é feita a ligação do **painel frontal** na motherboard?",
+        "resp": "Conectar os fios (power SW, LEDs, reset) conforme manual."
+      },
+      { "perg": "O que fazer antes de inserir o **módulo de memória**?",
+        "resp": "Alinhar o pente de memória com o *socket*, tendo em atenção a ranhura (*notch*)e pressionar até encaixar."
+      },
+      { "perg": "Por que é importante **organizar cabos** internos?",
+        "resp": "Facilita circulação de ar, previne aquecimento e curto-circuitos."
+      },
+      { "perg": "Que **cabos** devem ser ligados à **motherboard** durante instalação?",
+        "resp": "Cabos de alimentação, SATA, front panel (LEDs, botão power/reset), USB e áudio."
+      },
+      { "perg": "Por que é importante **verificar encaixe** dos módulos de memória?",
+        "resp": "Mau encaixe impede funcionamento e pode gerar falhas no arranque."
+      },
+        { "perg": "Como garantir **boa ventilação** no interior da caixa do PC?",
+        "resp": "Organizar cabos e verificar posicionamento das ventoinhas e dissipadores."
+      },
+      { "perg": "Como **proteger a motherboard** durante a montagem?",
+        "resp": "Usar **superfícies antiestáticas** e **manipular pelas bordas**."
+      },
+      { "perg": "Como identificar o tipo de **memória compatível** com a motherboard?",
+        "resp": "Verificar documentação e observar o formato dos slots e especificações."
+      }
+    ]
+  },
+  "erros_habituais": {
+    "titulo": "Erros Habituais a Evitar",
+    "icone": "🚫",
+    "descricao": "Erros comuns na montagem e manutenção.",
+    "flashcards": [
+      { "perg": "Qual o perigo de aparafusar a motherboard sem espaçadores?",
+        "resp": "Pode provocar curto-circuito e danificar componentes."
+      },
+        { "perg": "Por que não se deve entortar placas de circuito?",
+        "resp": "Risco de romper pistas e causar falhas permanentes."
+      },
+      { "perg": "Como cabos desorganizados afetam o PC?",
+        "resp": "Atrapalham o fluxo de ar e podem causar superaquecimento ou curto."
+      },
+      { "perg": "Por que não usar elásticos para amarrar cabos?",
+        "resp": "Elásticos não resistem ao calor, partem-se e podem provocar curto-circuito."
+      },
+      { "perg": "Qual o risco de empilhar placas sem proteção?",
+        "resp": "Entortam pinos e podem provocar curto entre as trilhas."
+      },
+      { "perg": "O que pode ocorrer ao instalar cabos invertidos?",
+        "resp": "Possível falta de funcionamento de componentes ou danos eletrónicos."
+      },
+      { "perg": "Por que não forçar encaixe de módulos de memória?",
+        "resp": "Pode danificar a motherboard e inutilizar o módulo."
+      },
+      { "perg": "Qual risco ao misturar diferentes tipos de RAM?",
+        "resp": "Incompatibilidades, erros ou redução de desempenho."
+      },
+      { "perg": "Por que não deixar o cooler do CPU mal instalado?",
+        "resp": "Causa sobreaquecimento e pode danificar processador."
+      },
+      { "perg": "O que acontece se esquecer de conectar a ventoinha da CPU?",
+        "resp": "Processador pode sobreaquecer e falhar permanentemente."
+      }
+    ]
+  },
+  "falhas_comuns": {
+    "titulo": "Falhas Comuns e Soluções",
+    "icone": "✅",
+    "descricao": "Diagnóstico e resolução de problemas frequentes.",
+    "flashcards": [
+      { "perg": "O que fazer se o **PC não liga**?",
+        "resp": "Verificar alimentação, fonte, cabos, e realizar testes básicos na motherboard."
+      },
+      { "perg": "Como diagnosticar PC que **apita continuamente**?",
+        "resp": "Consultar manual para códigos de beep e verificar componentes mal conectados."
+      },
+      { "perg": "O que pode causar erro **Disk Boot Failure**?",
+        "resp": "Disco não é reconhecido pela BIOS, cabos soltos, ou disco sem sistema operativo."
+      },
+      { "perg": "Procedimento para **PC sem imagem**?",
+        "resp": "Conferir cabos VGA, placas gráficas, ventoinhas e resetar BIOS se necessário."
+      },
+      { "perg": "Por que o PC reinicia ou encrava?",
+        "resp": "Pode ser devido ao superaquecimento, mau contacto, problemas de hardware ou software corrompido."
+      },
+      { "perg": "Quando **substituir a bateria CMOS**?",
+        "resp": "Se o PC está com data e hora erradas após desligar."
+      },
+      { "perg": "Como testar se o novo módulo de memória foi reconhecido?",
+        "resp": "Aceder à BIOS ou ao sistema operativo e consultar quantidade disponível."
+      },
+      { "perg": "Quais sintomas indicam **problema na placa gráfica**?",
+        "resp": "Falhas de imagem, artefactos, ecrã preto ou reinícios frequentes."
+      },
+      { "perg": "O que faz se o **computador não reconhece o disco rígido**?",
+        "resp": "Verifica conexão de cabos SATA/IDE, configurações na BIOS e funcionamento do disco."
+      },
+      { "perg": "Quais passos ao **identificar sobreaquecimento** do sistema?",
+        "resp": "Limpar ventiladores, reaplicar pasta térmica e verificar dissipadores."
+      },
+      { "perg": "Como diagnosticar **falha da fonte de alimentação**?",
+        "resp": "Testar com multímetro, usar fonte conhecida ou recorrer a testador de PSU."
+      },
+      { "perg": "Por que razão o PC pode **encravar** durante instalação de SO?",
+        "resp": "Erro em disco, memória defeituosa ou problemas de compatibilidade."
+      },
+      { "perg": "Que tipo de falha pode ser identificada pelo POST (Power-On Self Test)?",
+        "resp": "Erros de memória, placa gráfica, CPU, cabos soltos ou falha de disco."
+      }
+    ]
+  }
+}

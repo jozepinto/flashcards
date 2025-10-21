@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcards Arduino - Categorias</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    /* ===== Ecra de CATEGORIAS ===== */
+    .categorias-view {
+	   display: none;
+    }
+    
+    .categorias-view.ativo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 90vh;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+      pointer-events: auto;
+    }
+    
+    .header-logo {
+      text-align: center;
+      margin-bottom: 50px;
+      color: white;
+    }
+    
+    .header-logo h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+      letter-spacing: 2px;
+    }
+    
+    .header-logo .subtitle {
+      font-size: 1.2em;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+    
+    .arduino-logo {
+      width: 120px;
+      height: auto;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+    }
+    
+    .categorias-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .categoria-card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px 30px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      border: 3px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .categoria-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s;
+      z-index: 1;
+    }
+    
+    .categoria-card:hover::before {
+      left: 100%;
+    }
+    
+    .categoria-card:hover {
+      transform: translateY(-15px) scale(1.05);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+    
+    .categoria-card.ativo {
+      border-color: #667eea;
+      background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+    }
+    
+    .categoria-icon {
+      font-size: 3em;
+      margin-bottom: 15px;
+      display: block;
+      text-align: center;
+    }
+    
+    .categoria-title {
+      font-size: 1.4em;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    
+    .categoria-desc {
+      font-size: 0.95em;
+      color: #666;
+      text-align: center;
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+    
+    .categoria-count {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9em;
+      font-weight: 600;
+      margin: 0 auto;
+      display: flex;
+      gap: 8px;
+    }
+    
+    .categoria-count::after {
+      content: ' flashcards';
+    }
+    
+    /* ===== Ecra de FLASHCARDS ===== */
+    .flashcards-view {
+      display: none;
+      padding: 0;
+    }
+    
+    .flashcards-view.ativo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+      pointer-events: auto;
+    }
+    
+    .flashcards-view-content {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      /*flex: 1;*/
+      padding: 10px;
+      overflow-y: auto;
+    }
+    
+    .flashcards-view-footer {
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 700px;
+      padding: 0 20px;
+    }
+    
+    .header-flashcards {
+      color: white;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    
+    .header-flashcards h1 {
+      font-size: 2.5em;
+      margin-bottom: 6px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .header-flashcards .categoria-atual {
+      font-size: 1.25em;
+      opacity: 0.85;
+      font-weight: 600;
+	  margin-bottom: 5px;
+	  color: #00fdff;
+    }
+    
+    .btn-voltar {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: 2px solid white;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-size: 1em;
+      cursor: pointer;
+	  margin-top:5em;
+      /*margin-bottom: 20px;*/
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+      font-weight: 600;
+    }
+    
+    .btn-voltar:hover {
+      background: rgba(255,255,255,0.3);
+      transform: translateX(-5px);
+    }
+    
+    .card-container {
+      perspective: 1000px;
+      margin-bottom: 30px;
+    }
+    
+    #flashcard {
+      background: white;
+      border-radius: 20px;
+      padding: 50px 40px;
+      min-height: 300px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      cursor: pointer;
+      transition: transform 0.6s, box-shadow 0.3s;
+      transform-style: preserve-3d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    
+    #flashcard:hover {
+      box-shadow: 0 25px 70px rgba(0,0,0,0.4);
+      transform: translateY(-5px);
+    }
+    
+    #flashcard.flipped {
+      animation: flip 0.6s ease-in-out;
+    }
+    
+    @keyframes flip {
+      0% { transform: rotateY(0deg); }
+      50% { transform: rotateY(90deg); }
+      100% { transform: rotateY(0deg); }
+    }
+    
+    .card-label {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .card-content {
+      font-size: 1.3em;
+      color: #333;
+      text-align: center;
+      line-height: 1.7;
+      margin-top: 20px;
+      max-height: 250px;
+      overflow-y: auto;
+	  opacity:1;
+    }
+    
+    .card-content::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .card-content::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    
+    .card-content::-webkit-scrollbar-thumb {
+      background: #667eea;
+      border-radius: 10px;
+    }
+    
+    /* Estilos para elementos Markdown */
+    .card-content h1, .card-content h2, .card-content h3,
+    .card-content h4, .card-content h5, .card-content h6 {
+      margin: 15px 0 10px 0;
+      color: #667eea;
+    }
+    
+    .card-content code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+      color: #c02c70;
+    }
+    
+    .card-content pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      text-align: left;
+      margin: 15px 0;
+      font-size: 0.85em;
+    }
+    
+    .card-content pre code {
+      background: none;
+      padding: 0;
+      color: #f8f8f2;
+    }
+    
+    .card-content blockquote {
+      border-left: 4px solid #667eea;
+      padding-left: 15px;
+      margin: 15px 0;
+      font-style: italic;
+      color: #666;
+      background: #f9f9f9;
+      padding: 10px 15px;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .card-content ul, .card-content ol {
+      text-align: left;
+      margin: 15px 0;
+      padding-left: 30px;
+    }
+    
+    .card-content li {
+      margin: 8px 0;
+    }
+    
+    .card-content hr {
+      border: none;
+      border-top: 2px solid #e0e0e0;
+      margin: 20px 0;
+    }
+    
+    .card-content a {
+      color: #667eea;
+      text-decoration: none;
+      border-bottom: 1px solid #667eea;
+    }
+    
+    .card-content a:hover {
+      color: #764ba2;
+      border-bottom-color: #764ba2;
+    }
+    
+    .card-content strong {
+      color: #333;
+      font-weight: 700;
+    }
+    
+    .card-content em {
+      font-style: italic;
+      color: #555;
+    }
+    
+    .card-content del {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+    
+    .card-hint {
+      position: absolute;
+      bottom: 20px;
+      font-size: 0.9em;
+      color: #999;
+      font-style: italic;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    
+    button {
+      background: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 50px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      color: #667eea;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+	.codeblock{
+	  display: block;
+	  text-align: left;
+	  background: #fcfcfc !important;
+	  white-space: pre;
+	}
+    #mostrar {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px 40px;
+    }
+    
+    .progress {
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 15px 25px;
+      text-align: center;
+      color: white;
+      font-size: 1.1em;
+      font-weight: 600;
+      backdrop-filter: blur(10px);
+    }
+    
+    @media (max-width: 768px) {
+      .categorias-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .header-logo h1 {
+        font-size: 2.2em;
+      }
+      
+      .categoria-card {
+        padding: 30px 25px;
+      }
+      
+      #flashcard {
+        padding: 40px 30px;
+        min-height: 250px;
+      }
+      
+      .card-content {
+        font-size: 1.1em;
+      }
+      
+      button {
+        padding: 12px 24px;
+        font-size: 0.95em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- TELA DE CATEGORIAS -->
+  <div class="categorias-view ativo" id="categoriasView">
+    <div class="header-logo">
+      <svg class="arduino-logo" stroke="#00979c" version="1.1" viewBox="0 0 187.6 89.46" xmlns="http://www.w3.org/2000/svg">
+        <g transform="matrix(.2598 0 0 .2598 .5501 .4482)" fill="none" stroke-width="59">
+          <path d="m174 30c-95.1-7.57-175 105-136 192 38 94.4 181 120 249 44.4 65.9-64.6 91.3-164 172-215 82-56 214-3.12 230 96.4 15.6 95.3-87.1 188-180 160-68.7-15.5-118-74.2-146-136-34.5-59-79.6-122-150-138-12.5-2.84-25.4-3.96-38.2-3.94z"/>
+          <path d="m118 165h120" stroke-width="25"/>
+          <path d="m486 165h100m-51-50v100" stroke-width="32"/>
+        </g>
+      </svg>
+      <h1>🚀 <i>Flashcards</i> Arduino</h1>
+      <p class="subtitle">Aprende Arduino de forma interativa</p>
+    </div>
+    
+    <div class="categorias-grid" id="categoriasGrid"></div>
+  </div>
+  
+  <!-- TELA DE FLASHCARDS -->
+  <div class="flashcards-view" id="flashcardsView">
+    <div class="flashcards-view-content">
+      <div class="container">
+        <div class="header-flashcards">
+          <h1>📚 <i>Flashcards</i> Arduino</h1>
+          <p class="categoria-atual" id="categoriaNome"></p>
+        </div>
+        
+        <div class="card-container">
+          <div id="flashcard">
+            <div class="card-label" id="card-label">Pergunta</div>
+            <div class="card-content" id="card-content">A carregar...</div>
+            <div class="card-hint">👆 Clique para revelar</div>
+          </div>
+        </div>
+        
+        <div class="controls">
+          <button id="anterior">← Anterior</button>
+          <button id="mostrar">Mostrar Resposta</button>
+          <button id="proximo">Próximo →</button>
+        </div>
+        
+        <div class="progress" id="progress">Cartão 1 de 3</div>
+      </div>
+    </div>
+    
+    <div class="flashcards-view-footer">
+      <button class="btn-voltar" onclick="voltarCategorias()">← Voltar às Categorias</button>
+    </div>
+  </div>
+
+  <script>
+    // BASE DE DADOS DE FLASHCARDS POR CATEGORIA
+	// markdown básico
+    // inline format {estilo1:valor1;...}...{/} Ex: {color:red}texto{/}
+    let categoriasData2 = {
+      plataforma: {
+        titulo: "Plataforma e Hardware",
+        icone: "⚙️",
+        descricao: "Conceitos fundamentais sobre Arduino",
+        flashcards: [
+          { perg: "O que é o **Arduino?**", resp: "Uma **plataforma de prototipagem eletrónica de hardware livre**, baseada num **microcontrolador** Atmel e programada em **C/C++**." },
+          { perg: "O que é um **microcontrolador**?", resp: "Um sistema computacional completo que inclui CPU, memória de dados e programa, sistema de clock, portas de I/O, periféricos e outros num só chip." },
+          { perg: "Quais são as características do **Arduino Uno R3**?", resp: "Opera com **5V**, entrada recomendada de 7-12V, **14 pinos digitais** (**6 PWM**), **6 pinos analógicos**, 32KB Flash, 2KB SRAM, 1KB EEPROM, cristal de 16MHz." },
+          { perg: "O que são **Shields** para Arduino?", resp: "Placas adicionais que se conectam à board Arduino, expandindo suas capacidades, expandindo funcionalidades de forma fácil e acessível." },
+		  { perg: "Quais são os **pinais PWM** do Arduino?", resp: "Pinos digitais 3, 5, 6, 9, 10, 11." },
+        ]
+      },
+      sketch: {
+        titulo: "Estrutura do Sketch",
+        icone: "📝",
+        descricao: "Setup, loop e estrutura básica",
+        flashcards: [
+          { perg: "O que é um **Sketch** no Arduino?", resp: "É o nome atribuído aos programas desenvolvidos para o Arduino." },
+          { perg: "Qual é a estrutura de um *Sketch* típico em Arduino?", resp: "É composto por **bibliotecas** e **variáveis globais** (opcional), e, obrigatoriamente, pelas funções `setup()` e `loop()`." },
+          { perg: "Para que serve a função `setup()`?", resp: "A função `setup()` é executada uma única vez no início do programa, normalmente inicializa variáveis, configura pinos, inicia comunicações, etc." },
+          { perg: "Para que serve a função `loop()`?", resp: "Executa comandos repetidamente, permitindo leituras e ações contínuas conforme condições definidas." },
+        ]
+      },
+      pinos: {
+        titulo: "Portas e Pinos",
+        icone: "🔌",
+        descricao: "Portas digitais, analógicas e PWM",
+        flashcards: [
+          { perg: "Quantas **portas digitais** e **portas analógicas** tem o Arduino Uno?", resp: "**14 portas digitais** (0 a 13), **6 portas analógicas** (A0 a A5)." },
+	      { perg: "Qual a diferença entre portas **digitais** e **analógicas** no Arduino?", resp: "**Portas digitais** leem ou enviam sinais binários (0V ou 5V).<br>**Portas analógicas** permitem ler ou escrever valores num intervalo definido." },
+          { perg: "O que significa **HIGH** e **LOW** em Arduino?", resp: "**{color:red}HIGH{/}** corresponde normalmente a **{color:red}5V{/}**, e **LOW** a **0V**." },
+          { perg: "Qual é a resolução do **conversor ADC** do Arduino Uno R3?", resp: "O conversor **ADC é de 10 bits**, permitindo leituras de **0** (0V) a **{color:red}1023{/}** ({color:red}5V{/})." },
+          { perg: "O que são pinos **PWM** e para que servem?", resp: "Pinos PWM permitem **simular** uma **{color:blue}tensão variável{/}**, utilizados para controlar LEDs e motores, etc." },
+          { perg: "O que acontece ao ler um pino digital não ligado?", resp: "Pode devolver valores indeterminados (*floating*), instáveis devido à ausência de referência elétrica." },
+          { perg: "Como aumentar e diminuir brilho de um LED num ciclo `for`?", resp: "Incrementa valor de PWM até ao máximo e decrementa até ao mínimo usando `analogWrite()`." },   
+        ]
+      },
+      linguagem: {
+        titulo: "Linguagem e Sintaxe",
+        icone: "💻",
+        descricao: "Programação em C/C++ para Arduino",
+        flashcards: [
+          { perg: "O que significa dizer que a linguagem C é **case sensitive**?", resp: "Distingue letras maiúsculas das minúsculas: as variáveis `VAR`, `var` e `Var` são diferentes." },
+          { perg: "O que é o estilo **camelCase** na escrita em Arduino?", resp: "Nas variáveis e funções a primeira palavra começa com minúscula e as seguintes com maiúscula. Exemplo: `<b>d</b>igital<b>W</b>rite`." },
+          { perg: "Qual o símbolo obrigatório para terminar uma instrução em C?", resp: "Ponto e vírgula `;`." },
+          { perg: "Como escrever **comentários** no código Arduino?", resp: "`//` para uma linha.<br> `/* ... */` para múltiplas linhas." },
+          { perg: "Como devem ser a escritos os comandos e funções em Arduino?", resp: "Os comandos devem ser escritos em minúsculas. As funções seguem a convenção camelCase." },
+          { perg: "O que são diretivas de pré-processamento?", resp: "Instruções ao compilador processadas antes da compilação, como `#include` e `#define`." },
+          { perg: "Para que serve a diretiva `#include`?", resp: "Inclui ficheiros (bibliotecas) necessários ao projeto, como `#include &lt;Wire.h&gt;`." },
+          { perg: "O que fazer em caso de surgir **erro de compilação**?", resp: "Verificar sintaxe (nomeadamente erros de digitação), declaração de variáveis e uso correto de funções." },
+          { perg: "O que acontece se te esqueceres de colocar o **ponto e vírgula** numa instrução?", resp: "Resulta em **erro de compilação**." },
+        ]
+      },
+      variaveis: {
+        titulo: "Contantes, variáveis e Tipos de Dados",
+        icone: "📊",
+        descricao: "Declaração e tipos de dados",
+        flashcards: [
+     	  { perg: "Como associar nomes descritivos às variáveis?", resp: "Escolhe nomes que expliquem sua função, como `tempoEspera`, `brilhoLED` e `estadoBotao`." },
+          { perg: "Como declarar uma **variável inteira** chamada {color:darkviolet}contador{/}?", resp: "`int contador = 0;`" },
+          { perg: "Diferença entre variável **local** e **global**?", resp: "**Local** existe apenas dentro de funções/blocos.<br>**global** é acessível em qualquer parte do programa." },
+          { perg: "Qual a diferença entre `int` e `byte`?", resp: "`int`(2 bytes) guarda números inteiros incluindo negativos.<br>`byte`(1 byte RAM) guarda números positivos entre 0 e 255." },
+          { perg: "Como declarar uma **constante**?", resp: "Usa-se o modificador `const`.<br>Por exemplo: `const int PINO_LED = 10;`" },
+          { perg: "Quais os principais **tipos de dados** em Arduino?", resp: "`byte`, `int` (inteiro), `float` (decimal), `char` (caracter), `bool` (verdadeiro/falso), `string` (texto)." },
+          { perg: "Qual o intervalo de valores para uma variável do tipo `byte`?", resp: "De 0 a 255." },
+          { perg: "Qual a diferença entre `#define` e `const` ao declarar constantes em Arduino?", resp: "`#define` substitui texto antes da compilação e não ocupa memória.<br> `const` guarda o valor na memória do microcontrolador." },
+           { perg: "Por que usar `const` permite melhor depuração?", resp: "Respeita regras de âmbito (global/local) e tipo de dados, facilitando rastreamento e correção de erros pelo compilador." },
+
+          { perg: "Para que serve o prefixo B em números em Arduino?", resp: "Indica que o número está escrito em binário, por exemplo `byte num = <b>B</b>1010;`." },
+        ]
+      },
+      operadores: {
+        titulo: "Operadores",
+        icone: "➕",
+        descricao: "Operadores aritméticos, lógicos, relacionais...",
+        flashcards: [
+          { perg: "Quais são os **operadores aritméticos** básicos em C?", resp: "{color:darkviolet}+{/} (soma), {color:darkviolet}-{/} (subtração), {color:darkviolet}*{/} (multiplicação), {color:darkviolet}/{/} (divisão), {color:darkviolet}%{/} (resto da divisão)." },
+          { perg: "Quais são os **operadores relacionais** em C?", resp: "{color:darkviolet}=={/} (igual), {color:darkviolet}!={/} (diferente), {color:darkviolet}<{/} (menor), {color:darkviolet}>{/} (maior), {color:darkviolet}<= (menor ou igual), {color:darkviolet}>={/} (maior ou igual)." },
+          { perg: "Quais são os principais **operadores** usados em Arduino?", resp: "Aritméticos (`+`, `-`, `*`, `/`, `%`), relacionais (`==`, `!=`, `&lt;`, `&gt;`), lógicos (`&&`, `||`, `!`)." },
+          { perg: "Para que serve o operador lógico `&&` (E)?", resp: "Permite testar se duas condições são verdadeiras simultaneamente." },
+		]
+	  },
+      funcoes: {
+        titulo: "Funções Principais",
+        icone: "🔧",
+        descricao: "Funções mais utilizadas no Arduino",
+        flashcards: [
+          { perg: "Para que serve a função `pinMode()`?", resp: "Define se um pino específico será usado como entrada (**INPUT**) ou saída (**OUTPUT**)." },
+          { perg: "O que faz a função `digitalWrite()`?", resp: "Define o estado de um pino de saída como **{color:red}HIGH{/}** (**{color:red}5V{/}**) ou **LOW** (**0V**)." },
+          { perg: "O que faz a função `digitalRead()`?", resp: "Lê o **valor digital** (**{color:red}HIGH{/}** ou **LOW**) de um pino configurado como entrada." },
+          { perg: "O que faz a função `analogRead()`?", resp: "Lê o **valor analógico** de um pino de entrada, variando de **0** a **{color:red}1023{/}**." },
+          { perg: "Para que serve a função `delay()` no Arduino?", resp: "Interrompe a execução do programa por um período de tempo definido em **milissegundos**." },
+          { perg: "Para que serve a função `millis()`?", resp: "Retorna o número de **milissegundos** desde que o programa começou a correr." },
+          { perg: "Qual a diferença entre `void funcao()` e `int funcao()`?", resp: "**Void** indica que a função não retorna um valor.<br>**int** retorna um valor inteiro." },
+          { perg: "Qual é a utilidade da função `map()` em Arduino?", resp: "Converte um valor de um intervalo para outro:<br>**map(**_valor_, _deMin_, _deMax_, _paraMin_, _paraMax_**)**.<br>Exemplo:<br>`byte brilho = map(valorPot, 0, 1023, 0, 255);`" },
+        ]
+      },
+      sensores: {
+        titulo: "Sensores e Leitura",
+        icone: "📡",
+        descricao: "Leitura de sensores e calibração",
+        flashcards: [
+          { perg: "Como posso ler um **sensor analógico** no Arduino?", resp: "Liga-se o sensor a um pino analógico e utiliza-se `analogRead()` para obter valores entre 0 e 1023." },
+          { perg: "Como ler valores de um **potenciômetro** no Arduino?", resp: "Ligar o potenciômetro a uma **porta analógica** e usar a função `analogRead()` para obter o valor." },
+          { perg: "O que é o **debounce** em botões?", resp: "Técnica que **evita múltiplas leituras** erradas causadas por oscilações rápidas e indesejadas ao premir o botão." },
+          { perg: "Qual é a maneira mais simples de fazer *debounce* em um botão?", resp: "Usar *delays* para evitar leituras múltiplas e instáveis ao pressionar o botão." },
+          { perg: "Para que serve calibração de sensores?", resp: "Permite ajustar os limites de valores para maior precisão na leitura conforme o ambiente." },
+          { perg: "Como restringir o valor máximo lido por um sensor?", resp: "Utilizar `constrain()` para limitar entre valores mínimo e máximo desejados. Exemplo:<br>```int valorSensor = constrain(dadosSensor, 40, 127);<br>// valorSensor estará sempre entre 40 e 127```"},
+          { perg: "Como converter uma leitura de um **LDR** em **brilho** de um LED?", resp: "Ler o LDR com `analogRead()` e usar `map()` para ajustar o valor à intensidade do LED via **PWM**." },
+        ]
+      },
+      comunicacao: {
+        titulo: "Comunicação e Debug",
+        icone: "📞",
+        descricao: "Comunicação série e depuração",
+        flashcards: [
+          { perg: "O que é a **comunicação série** no Arduino?", resp: "Permite transmitir dados entre o Arduino e o computador ou outro dispositivo pelos pinos **RX** e **TX**." },
+          { perg: "Qual é a importância do **monitor série** no IDE Arduino?", resp: "Permite visualizar dados enviados pela placa Arduino.<br>É muito útil para depuração e comunicação com o computador." },
+          { perg: "Para que serve a função `Serial.begin()`?", resp: "**Inicializa a comunicação série**, definindo a velocidade em **bauds**.<br>Exemplo: `Serial.begin(9600);`" },
+          { perg: "Para que serve `Serial.print()`?", resp: "Envia dados do Arduino para o computador via monitor série, permitindo visualizar variáveis e mensagens." },
+          { perg: "Como fazer *debug* do código usando `Serial.print()`?", resp: "Imprime mensagens e valores para o monitor série permitindo identificar problemas e testar resultados." },
+		  { perg: "Qual é a diferença entre `Serial.print()` e `Serial.println()`?", resp: "`Serial.print()` escreve dados na porta série sem mudar de linha no final.<br>`Serial.println()` escreve dados e acrescenta uma mudança de linha no fim." },
+        ]
+      },
+      controlo: {
+        titulo: "Estruturas de Controlo",
+        icone: "⚡",
+        descricao: "Estruturas condicionais e cicilos",
+        flashcards: [
+          { perg: "Para que serve a estrutura condicional **if**...**else**?", resp: "A estrutura **if**...**else** serve para executar ações diferentes conforme uma **condição** seja **verdadeira** ou **falsa**." },
+          { perg: "Para que serve a estrutura **switch...case**", resp: "Permite selecionar entre múltiplos caminhos de execução conforme o valor da variável." },
+          { perg: "Como funciona o ciclo `while`?", resp: "**Repete um bloco de código enquanto a condição for verdadeira**. A condição é testada antes de cada repetição" },
+          { perg: "Qual é a sintaxe básica de um ciclo **for**?", resp: "**for(**_inicialização_**;** _condição_**;** _incremento_**) {** _instruções_ **}**.<br>Exemplo:<br>```for (byte i=2; i< 9; i++) {<br>  pinMode(i, OUTPUT);<br>}```" },
+		  { perg: "Compara o ciclo **do**...**while** em comparação com **while**?", resp: "O ciclo **do..while** apenas testa a condição no final do ciclo, pelo que executa sempre uma vez.<br>O ciclo **while** testa a condição no início, pelo que pode não executar as instruções do ciclo." },
+          { perg: "O que significa ciclo infinito?", resp: "Um ciclo que nunca termina, por exemplo:<br>```while(true) {<br> // do something...<br>}```" },
+        ]
+      },
+      arrays: {
+        titulo: "Vetores (Arrays)",
+        icone: "📋",
+        descricao: "Vetores e coleções de dados",
+        flashcards: [
+          { perg: "O que é um **vetor** (*array*)?", resp: "Coleção de variáveis do mesmo tipo, acedidas por índice, que começa em zero." },
+          { perg: "Como se declara e utiliza um vetor (array) em Arduino?", resp: "Um vetor é declarado com tipo e tamanho, por exemplo:<br>`int valores[5];<br>`Permite armazenar 5 valores do mesmo tipo (neste caso *int*)." },
+          { perg: "Como declarar e inicializar um vetor (array) de números inteiros com 4 elementos?", resp: "```int valore[] = {32, 21, -5, 44};<br>// neste caso o tamanho é determinado pelo compilador```" },
+          { perg: "Qual é o **índice inicial** de um vetor?", resp: "O índice inicial é **{font-size:120%}0{/}**." },
+          { perg: "Como aceder a todos os elementos de um array (vetor)?", resp: "Utilizar `for` do índice 0 ao tamanho do array menos 1. Exemplo:<br>```for (int i = 0; i < tamanho; i++) {<br>  Serial.println(<b>vetor[i]</b>);<br>} ```" },
+          { perg: "Para que serve `sizeof()` no uso de *arrays* (vetores\)?", resp: "Permite saber o **tamanho total** do array **em bytes**. Exemplo:<br>```float valorSensores[]={10.5, 12.0, 0.5};<br>int tam= sizeof(valorSensores);<br>// tamanho = 12 ( 3 elementos x 4 bytes do float)```" },
+          { perg: "Como calcular o **número de elementos** de um vetor?", resp: "Divide **sizeof(**_vetor_**)** pelo **sizeof(**_tipo do 1º elemento_**)**, por exemplo:<br><br>`tam = sizeof(vetor)/sizeof(vetor[0]);`" },
+          { perg: "Que vantagem tem definir pinos num vector?", resp: "Facilita configuração conjunta de vários pinos e manipulação em ciclos." },
+          { perg: "Como declarar um array de bytes e usá-lo para configurar pinos?", resp: "```byte pinos[] = {2, 4, 6, 8};<br>  for (int i = 0; i < sizeof(pinos); i++) {<br>  pinMode(pinos[i], INPUT);<br>}```" },
+        ]
+      },
+      praticas: {
+        titulo: "Boas Práticas",
+        icone: "✅",
+        descricao: "Dicas e recomendações importantes",
+        flashcards: [
+          { perg: "Qual a importância dos **comentários** no código?", resp: "Os **comentários não são instruções** para o programa!<br>Tornam o código mais legível e explicam a sua função para quem lê." },
+          { perg: "Boas práticas na atribuição de nomes às variáveis?", resp: "Usar nomes claros e significativos, inicializar ao declarar e escolher tipos de dados económicos (usar byte em vez de int para valores inferiores a 255)." },
+          { perg: "Qual o benefício de **evitar duplicação de código** usando **funções**?", resp: "Usar funções **reduz erros**, **melhora a organização** e permite a **reutilização de código**, tornando os projetos mais eficientes." },
+          { perg: "Qual a importância de **modulizar** o código através de funções?", resp: "Dividir o código em funções **facilita a organização**, permite **reutilizar trechos de código** e **simplifica a depuração e a expansão** futura do projeto." },
+		  { perg:"Porque deves tratar sempre a **validação** das entradas e sensores?", resp: "A validação **garante que o programa reage adequadamente a valores inesperados**, evitando comportamentos errados ou perigosos."}
+        ]
+      }
+    };
+
+let categoriasData = {};
+    let categoriaSelecionada = null;
+    let idxFlashcard = 0;
+    let respostaVisivel = false;
+
+	function carregarFlashcardsInfo() {
+	  // Verifica se categoriasData está vazio (objeto sem propriedades)
+	  if (Object.keys(categoriasData).length === 0) {
+		// Tenta carregar do JSON externo
+		fetch('flashcards.json')
+		  .then(resp => {
+			if (!resp.ok) throw new Error('Arquivo JSON não encontrado');
+			return resp.json();
+		  })
+		  .then(data => {
+			if (data && Object.keys(data).length > 0) {
+			  categoriasData = data;
+			  console.log('Flashcards carregados do arquivo JSON');
+			  sucess = true;
+			  renderizarCategorias();
+			  
+			}
+		  })
+		  .catch((error) => {
+			console.error('Erro ao carregar JSON:', error.message);
+			// Mostrar erro visualmente
+			const grid = document.getElementById('categoriasGrid');
+			grid.innerHTML = `
+			  <div style="grid-column: 1/-1; text-align: center; padding: 20px;">
+				<div style="background: rgba(255,255,255,0.9); border-radius: 20px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+				  <h2 style="color: #ff6b6b; margin-bottom: 15px;">⚠️ Erro ao Carregar Flashcards</h2>
+				  <p style="color: #666; font-size: 1.1em; margin-bottom: 10px;">Não foi possível carregar o arquivo <code>flashcards.json</code></p>
+				  <p style="color: #999; font-size: 0.95em;">${error.message}</p>
+				  <p style="color: #999; font-size: 0.9em; margin-top: 20px;">Certifique-se de que o arquivo existe no mesmo diretório do HTML.</p>
+				</div>
+			  </div>
+			`;
+		  });
+	  } else {
+		console.log('Usando flashcards embutidos no código');
+	  }
+	}
+	
+    // Carregar estado do localStorage
+    function carregarEstado() {
+      const estado = localStorage.getItem('flashcardEstado');
+      if (estado) {
+        const { categoria, indice } = JSON.parse(estado);
+        if (categoriasData[categoria]) {
+          categoriaSelecionada = categoria;
+          idxFlashcard = indice;
+          
+          // Mostrar vista de flashcards diretamente
+          document.getElementById('categoriasView').classList.remove('ativo');
+          document.getElementById('flashcardsView').classList.add('ativo');
+          document.getElementById('flashcardsView').style.opacity = '1';
+          
+          const data = categoriasData[categoria];
+          document.getElementById('categoriaNome').textContent = data.titulo;
+          mostrarPergunta();
+          
+          return true;
+        }
+      }
+      return false;
+    }
+	
+	// Guardar estado no localStorage
+    function guardarEstado() {
+      if (categoriaSelecionada) {
+        const estado = {
+          categoria: categoriaSelecionada,
+          indice: idxFlashcard
+        };
+        localStorage.setItem('flashcardEstado', JSON.stringify(estado));
+      }
+    }
+	
+    // Renderizar categorias
+    function renderizarCategorias() {
+      const grid = document.getElementById('categoriasGrid');
+      grid.innerHTML = '';
+      
+      for (const [id, data] of Object.entries(categoriasData)) {
+        const card = document.createElement('div');
+        card.className = 'categoria-card';
+        card.onclick = () => selecionarCategoria(id);
+        
+        const count = data.flashcards.length;
+        card.innerHTML = `
+          <span class="categoria-icon">${data.icone}</span>
+          <div class="categoria-title">${data.titulo}</div>
+          <div class="categoria-desc">${data.descricao}</div>
+          <div style="text-align: center;">
+            <span class="categoria-count">${count}</span>
+          </div>
+        `;
+        
+        grid.appendChild(card);
+      }
+	  
+		// Tentar carregar estado anterior
+		if (!carregarEstado()) {
+		  // Se não houver estado, mostrar categorias normalmente
+		  document.getElementById('categoriasView').style.opacity = '1';
+		}
+    }
+
+    function selecionarCategoria(id) {
+      categoriaSelecionada = id;
+      idxFlashcard = 0;
+      respostaVisivel = false;
+	  guardarEstado();
+      
+      // Ocultar categorias e mostrar flashcards com fade
+      const categoriasView = document.getElementById('categoriasView');
+      const flashcardsView = document.getElementById('flashcardsView');
+      
+      categoriasView.style.opacity = '0';
+      categoriasView.style.pointerEvents = 'none';
+      setTimeout(() => {
+        categoriasView.classList.remove('ativo');
+        flashcardsView.classList.add('ativo');
+        flashcardsView.style.opacity = '0';
+        
+        const data = categoriasData[id];
+        document.getElementById('categoriaNome').textContent = data.titulo;
+        mostrarPergunta();
+        
+        // Fade in dos flashcards
+        setTimeout(() => {
+          flashcardsView.style.opacity = '1';
+        }, 50);
+      }, 300);
+    }
+
+    function voltarCategorias() {
+      const categoriasView = document.getElementById('categoriasView');
+      const flashcardsView = document.getElementById('flashcardsView');
+      
+      flashcardsView.style.opacity = '0';
+      flashcardsView.style.pointerEvents = 'auto';
+      setTimeout(() => {
+        flashcardsView.classList.remove('ativo');
+        categoriasView.classList.add('ativo');
+        categoriasView.style.opacity = '0';
+        categoriasView.style.pointerEvents = 'auto';
+        
+        setTimeout(() => {
+          categoriasView.style.opacity = '1';
+        }, 50);
+      }, 300);
+      
+      categoriaSelecionada = null;
+      localStorage.removeItem('flashcardEstado');	  
+    }
+
+    function getFlashcardsAtuais() {
+      return categoriasData[categoriaSelecionada].flashcards;
+    }
+
+    function markdownToHtml(md) {
+      if (!md) return '';
+      
+      /*let text = md.replace(/&/g, '&amp;')
+                   .replace(/</g, '&lt;')
+                   .replace(/>/g, '&gt;');
+      */
+	  let text = md;
+	  /*
+      text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, function(_, lang, code) {
+        return `<pre><code class="language-${lang || 'plaintext'}">${code.trim()}</code></pre>`;
+      });
+      */
+      text = text.replace(/^(#{1,6})\s+(.*)$/gm, function(_, hashes, content) {
+        return `<h${hashes.length}>${content}</h${hashes.length}>`;
+      });
+      
+      text = text.replace(/^(\-{3,}|\*{3,}|_{3,})$/gm, '<hr>');
+      text = text.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2" style="max-width: 100%; border-radius: 8px;">');
+      text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+      text = text.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+      text = text.replace(/___(.+?)___/g, '<strong><em>$1</em></strong>');
+      text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      text = text.replace(/__(.+?)__/g, '<strong>$1</strong>');
+      text = text.replace(/\*([^\s*][^*]*?)\*/g, '<em>$1</em>');
+      text = text.replace(/\b_([^\s_][^_]*?)_\b/g, '<em>$1</em>');
+      text = text.replace(/~~(.+?)~~/g, '<del>$1</del>');
+	  text = text.replace(/```([\s\S]*?)```/g, '<code class="codeblock">$1</code>');
+      text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+      text = text.replace(/^&gt;\s+(.+)$/gm, '<blockquote>$1</blockquote>');
+      text = text.replace(/^[\*\-]\s+(.+)$/gm, '<li>$1</li>');
+      text = text.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+      text = text.replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>');
+      text = text.replace(/  \n/g, '<br>');
+      text = text.replace(/\n\n/g, '</p><p>');
+      text = text.replace(/:\)/g, '😊').replace(/:\(/g, '☹️');
+	  text = text.replace(/\{([^}]+)\}([^{]*?)\{\/\}/g, '<span style="$1">$2</span>');
+      
+      if (!text.match(/^<(h\d|ul|ol|blockquote|pre|hr)/)) {
+        text = '<p>' + text + '</p>';
+      }
+      
+      return text;
+    }
+
+    function normalizarFlashcard(card) {
+      return {
+        pergunta: card.perg || card.pergunta || 'Pergunta não encontrada',
+        resposta: card.resp || card.respo || card.resposta || 'Resposta não encontrada'
+      };
+    }
+
+    function mostrarPergunta() {
+      respostaVisivel = false;
+      const flashcards = getFlashcardsAtuais();
+      
+      if (flashcards.length > 0) {
+        const card = normalizarFlashcard(flashcards[idxFlashcard]);
+        document.getElementById('card-content').innerHTML = markdownToHtml(card.pergunta);
+        document.getElementById('card-label').textContent = 'Pergunta';
+		document.getElementById('mostrar').textContent = 'Mostrar Resposta';
+        document.getElementById('card-label').style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+		document.getElementById('mostrar').style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+
+        atualizarProgresso();
+      }
+    }
+
+    function mostrarResposta() {
+      const flashcards = getFlashcardsAtuais();
+      if (flashcards.length === 0) return;
+      
+      document.getElementById('flashcard').classList.add('flipped');
+      setTimeout(() => document.getElementById('flashcard').classList.remove('flipped'), 600);
+      
+      const card = normalizarFlashcard(flashcards[idxFlashcard]);
+      
+      if (respostaVisivel) {
+        document.getElementById('card-content').innerHTML = markdownToHtml(card.pergunta);
+        document.getElementById('card-label').textContent = 'Pergunta';
+		document.getElementById('mostrar').textContent = 'Mostrar Resposta';
+		document.getElementById('mostrar').style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+        document.getElementById('card-label').style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+      } else {
+        document.getElementById('card-content').innerHTML = markdownToHtml(card.resposta);
+        document.getElementById('card-label').textContent = 'Resposta';
+		document.getElementById('mostrar').textContent = 'Mostrar Pergunta';
+		document.getElementById('mostrar').style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        document.getElementById('card-label').style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+      }
+      
+      respostaVisivel = !respostaVisivel;
+    }
+
+    function atualizarProgresso() {
+      const flashcards = getFlashcardsAtuais();
+      document.getElementById('progress').textContent = `Cartão ${idxFlashcard + 1} de ${flashcards.length}`;
+    }
+
+    function proximoCard() {
+      const flashcards = getFlashcardsAtuais();
+      idxFlashcard = (idxFlashcard + 1) % flashcards.length;
+      mostrarPergunta();
+	  guardarEstado();
+    }
+
+    function anteriorCard() {
+      const flashcards = getFlashcardsAtuais();
+      idxFlashcard = (idxFlashcard - 1 + flashcards.length) % flashcards.length;
+      mostrarPergunta();
+	  guardarEstado();
+    }
+
+    // Event Listeners
+    document.getElementById('mostrar').onclick = mostrarResposta;
+    document.getElementById('proximo').onclick = proximoCard;
+    document.getElementById('anterior').onclick = anteriorCard;
+    document.getElementById('flashcard').onclick = mostrarResposta;
+    
+    // Atalhos de teclado
+    document.addEventListener('keydown', (e) => {
+      if (categoriaSelecionada) {
+        if (e.key === 'ArrowRight') proximoCard();
+        if (e.key === 'ArrowLeft') anteriorCard();
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          mostrarResposta();
+        }
+      }
+    });
+    
+    // Inicializar
+    carregarFlashcardsInfo(); // le ficheiro externo se nao foram existirem dados 
+    renderizarCategorias();
+  </script>
+</body>
+</html>
